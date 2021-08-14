@@ -1,5 +1,4 @@
 from dataclasses import dataclass
-import DataDownloader as ingestors
 from typing import NoReturn
 import yaml
 
@@ -78,25 +77,3 @@ def load_yaml(yaml_file: str) -> dict:
     file_stream = open(yaml_file, "r")
     config = yaml.load(file_stream)
     return config
-
-
-def build_ingestor(ingestor_type: str,
-                   configuration: dict) -> ingestors.DataIngestor:
-    """The builder function for the Ingestor given the ingestor type.
-
-    Parameters:
-    ingestor_type {str} -- The type to create the given Ingestor class.
-    configuration {dict} -- The configuration for the Ingestor class.
-
-    Returns:
-    An instance of a DataIngestor.
-    """
-    if ingestor_type.lower() == "kaggle":
-        try:
-            config = KaggleConfig(**configuration)
-        except Exception as e:
-            raise WrongConfigError(configuration, str(e))
-        ingestor = ingestors.KaggleIngestor(config)
-        return ingestor
-    else:
-        raise UnknownIngestorError(ingestor_type)

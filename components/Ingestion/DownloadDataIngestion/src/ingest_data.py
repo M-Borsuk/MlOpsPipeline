@@ -1,6 +1,28 @@
 from logger import logger
 import utils as utils
 import argparse
+from DataDownloader import DataIngestor, KaggleDataIngestor
+
+
+def build_ingestor(ingestor_type: str, configuration: dict) -> DataIngestor:
+    """The builder function for the Ingestor given the ingestor type.
+
+    Parameters:
+    ingestor_type {str} -- The type to create the given Ingestor class.
+    configuration {dict} -- The configuration for the Ingestor class.
+
+    Returns:
+    An instance of a DataIngestor.
+    """
+    if ingestor_type.lower() == "kaggle":
+        try:
+            config = utils.KaggleConfig(**configuration)
+        except Exception as e:
+            raise utils.WrongConfigError(configuration, str(e))
+        ingestor = KaggleDataIngestor(config)
+        return ingestor
+    else:
+        raise utils.UnknownIngestorError(ingestor_type)
 
 
 def ingest(args):
