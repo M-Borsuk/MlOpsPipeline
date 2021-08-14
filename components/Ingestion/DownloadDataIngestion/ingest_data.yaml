@@ -1,0 +1,21 @@
+name: Download/Ingest Data Function
+description: Download/ingest data from a given soruce.
+
+inputs:
+- {name: ingestor_type, type: String, default: 'kaggle',description: 'Type of ingestor. Available ingestors right now: KaggleIngestor'}
+- {name: config_file_path, type: LocalPath, description: 'Path to the .yaml file, where the configuration of the step is stored.'}
+outputs:
+- {name: data_path, type: LocalPath, description: 'Path to the stored data'}
+
+implementation:
+  container:
+    image: not_yet/implemented:to_do
+    command: [
+      python, ingest_data.py,
+      --type,
+      {inputPath: ingestor_type},
+      --config, 
+      {inputValue: config_file_path},
+      --data,
+      {outputPath: data_path},
+    ]
