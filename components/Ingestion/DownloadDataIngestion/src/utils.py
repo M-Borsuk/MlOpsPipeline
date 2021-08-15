@@ -19,13 +19,13 @@ class KaggleConfig(Config):
     api_key: str
 
 
-class Error(Exception):
+class Error(Exception):  # pragma: no cover
     """Base class for other exceptions"""
 
     pass
 
 
-class KaggleDownloadError(Error):
+class KaggleDownloadError(Error):  # pragma: no cover
     """Raised when the kaggle dataset is not downloaded"""
 
     def __init__(self, command: str, error_message: str) -> NoReturn:
@@ -39,7 +39,7 @@ class KaggleDownloadError(Error):
         )
 
 
-class WrongConfigError(Error):
+class WrongConfigError(Error):  # pragma: no cover
     """Raised when the Config dataclass is not created"""
 
     def __init__(self, configuration: dict, error_message: str) -> NoReturn:
@@ -54,7 +54,7 @@ class WrongConfigError(Error):
         )
 
 
-class UnknownIngestorError(Error):
+class UnknownIngestorError(Error):  # pragma: no cover
     """Raised when the Ingestor type is not known"""
 
     def __init__(self, ingestor_type: str) -> NoReturn:
@@ -75,5 +75,5 @@ def load_yaml(yaml_file: str) -> dict:
     """
 
     file_stream = open(yaml_file, "r")
-    config = yaml.load(file_stream)
+    config = yaml.load(file_stream, Loader=yaml.FullLoader)
     return config
