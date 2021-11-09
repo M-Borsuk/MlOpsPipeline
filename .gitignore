@@ -127,6 +127,9 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+.vscode/settings.json
 
 # VS code
 .vscode/
+components/Ingestion/DownloadDataIngestion/junit/test-results.xml
+components/Ingestion/DownloadDataIngestion/src/config.yaml
