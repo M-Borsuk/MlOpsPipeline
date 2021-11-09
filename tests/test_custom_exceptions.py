@@ -1,7 +1,11 @@
 import pytest
 from typing import Tuple, NoReturn, Dict
 from pathlib import Path
-from src.utils import Config, KaggleConfig, load_yaml
+from mlops_pipeline.data_ingestion_service.ingestor_utilities.custom_exceptions import (
+    Config,
+    KaggleConfig,
+)
+from mlops_pipeline.utilities import load_yaml
 
 
 @pytest.mark.parametrize(
@@ -10,8 +14,7 @@ from src.utils import Config, KaggleConfig, load_yaml
         (
             "heesoo37/120-years-of-olympic-history-athletes-and-results",
             "/data/",
-            ("heesoo37/120-years-of-olympic-history-athletes-and-results",
-             "/data/"),
+            ("heesoo37/120-years-of-olympic-history-athletes-and-results", "/data/"),
         )
     ],
 )
@@ -57,17 +60,9 @@ def test_KaggleConfig(
 
 @pytest.mark.parametrize(
     "download_url,output_path",
-    [
-        (
-            "heesoo37/120-years-of-olympic-history-athletes-and-results",
-            "/data/",
-        )
-    ],
+    [("heesoo37/120-years-of-olympic-history-athletes-and-results", "/data/",)],
 )
-def test_KaggleConfig_exception(
-    download_url: str,
-    output_path: str,
-) -> NoReturn:
+def test_KaggleConfig_exception(download_url: str, output_path: str,) -> NoReturn:
     with pytest.raises(Exception):
         KaggleConfig(download_url, output_path)
 
@@ -86,8 +81,5 @@ def test_KaggleConfig_exception(
         )
     ],
 )
-def test_load_yaml(
-    yaml_file: str,
-    expected_result: Dict[str, str]
-) -> NoReturn:
+def test_load_yaml(yaml_file: str, expected_result: Dict[str, str]) -> NoReturn:
     assert load_yaml(yaml_file) == expected_result
