@@ -32,7 +32,8 @@ def ingest(args):
         .format(args.config)
     )
     configuration = utils.load_yaml(args.config)
-    ingestor = utils.build_ingestor(args.type, configuration)
+    configuration["output_path"] = args.data
+    ingestor = build_ingestor(args.type, configuration)
     logger.info("Loading in the dataset..")
     ingestor.download()
     logger.info("The dataset was loaded successfully!")
@@ -45,5 +46,4 @@ if __name__ == "__main__":
     parser.add_argument("--data", type=str, help="Path to save dataset files.")
 
     args = parser.parse_args()
-
     ingest(args)
