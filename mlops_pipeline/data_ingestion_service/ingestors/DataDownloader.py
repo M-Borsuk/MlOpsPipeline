@@ -1,6 +1,6 @@
 from abc import ABC, abstractclassmethod
 from typing import NoReturn
-import utils as utils
+import mlops_pipeline.utilities as utils
 
 
 class DataIngestor(ABC):
