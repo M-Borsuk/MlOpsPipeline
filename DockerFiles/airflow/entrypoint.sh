@@ -1,20 +1,15 @@
 #!/usr/bin/env bash
 
-if [ -f .env ]
-then
-  export $(cat .env | sed 's/#.*//g' | xargs)
-fi
-
 # Initiliase the metastore
 airflow db init
 
 # Run the scheduler in background
-# airflow users create --username ${AIRFLOW_USER} \
-#     --firstname ${AIRFLOW_FIRST_NAME} \
-#     --lastname ${AIRFLOW_LAST_NAME} \
-#     --role Admin \
-#     --password ${AIRFLOW_PASSWORD} \
-#     --email ${AIRFLOW_EMAIL}
+airflow users create --username Admin \
+    --firstname mateusz \
+    --lastname borsuk \
+    --role Admin \
+    --password admin \
+    --email mtszborsuk212@gmai.com
 
 airflow scheduler &> /dev/null &
 
