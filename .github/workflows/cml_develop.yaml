@@ -51,13 +51,11 @@ jobs:
         with:
           context: ./DockerFiles/mlflow
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+          tags: mborsuk97/mlops-pipeline/mlflow-container:latest
 
       - name: Build and push Docker image for airflow container
         uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
         with:
           context: ./DockerFiles/airflow
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+          tags: mborsuk97/mlops-pipeline/airflow-container:latest
