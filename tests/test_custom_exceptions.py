@@ -1,10 +1,11 @@
 import pytest
 from typing import Tuple, NoReturn, Dict
 from pathlib import Path
-from mlops_pipeline.data_ingestion_service.ingestor_utilities.custom_exceptions import (
-    Config,
+from mlops_pipeline.data_ingestion_service.ingestor_utilities.custom_configs import (
+    DataDownloaderConfig,
     KaggleConfig,
 )
+import mlops_pipeline.data_ingestion_service.ingestor_utilities.custom_exceptions as custom_exceptions
 from mlops_pipeline.utilities import load_yaml
 
 
@@ -18,10 +19,10 @@ from mlops_pipeline.utilities import load_yaml
         )
     ],
 )
-def test_Config(
+def test_DataDownloaderConfig(
     download_url: str, output_path: str, expected_result: Tuple[str]
 ) -> NoReturn:
-    config = Config(download_url, output_path)
+    config = DataDownloaderConfig(download_url, output_path)
     assert (config.download_url, config.output_path) == expected_result
 
 
@@ -63,7 +64,7 @@ def test_KaggleConfig(
     [("heesoo37/120-years-of-olympic-history-athletes-and-results", "/data/",)],
 )
 def test_KaggleConfig_exception(download_url: str, output_path: str,) -> NoReturn:
-    with pytest.raises(Exception):
+    with pytest.raises(TypeError):
         KaggleConfig(download_url, output_path)
 
 

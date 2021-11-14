@@ -133,3 +133,6 @@ dmypy.json
 .vscode/
 components/Ingestion/DownloadDataIngestion/junit/test-results.xml
 components/Ingestion/DownloadDataIngestion/src/config.yaml
+
+# Docker-compose dev files
+docker-compose.yaml

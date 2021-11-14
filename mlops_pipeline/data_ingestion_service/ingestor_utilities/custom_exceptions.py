@@ -1,21 +1,4 @@
-from dataclasses import dataclass
 from typing import NoReturn
-
-
-@dataclass
-class Config:
-    """Base configuration dataclass for DownloadDataIngestors."""
-
-    download_url: str
-    output_path: str
-
-
-@dataclass
-class KaggleConfig(Config):
-    """Configuration dataclass for kaggle related datasets"""
-
-    user_name: str
-    api_key: str
 
 
 class Error(Exception):  # pragma: no cover

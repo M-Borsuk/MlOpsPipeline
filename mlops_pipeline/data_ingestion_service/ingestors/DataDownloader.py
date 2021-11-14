@@ -3,17 +3,24 @@ from typing import NoReturn
 import mlops_pipeline.utilities as utils
 
 
-class DataIngestor(ABC):
-    def __init__(self, config: utils.Config) -> NoReturn:
-        self.config = config
+class DataDownloader(ABC):
+    """
+    Abstract class for downloading data from external sources.
+    """
 
     @abstractclassmethod
-    def download(self) -> NoReturn:
+    def download_data(self) -> NoReturn:
+        """
+        Abstract method for downloading data from external sources.
+        """
         pass
 
 
-class KaggleDataIngestor(DataIngestor):
+class KaggleDataDownloader(DataDownloader):
     def download(self) -> NoReturn:
+        """
+        Download data from Kaggle.
+        """
         import os
 
         os.environ["KAGGLE_USERNAME"] = self.config.user_name
