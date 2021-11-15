@@ -17,7 +17,7 @@ class DataDownloader(ABC):
 
 
 class KaggleDataDownloader(DataDownloader):
-    def download(self) -> NoReturn:
+    def download_data(self) -> NoReturn:
         """
         Download data from Kaggle.
         """
