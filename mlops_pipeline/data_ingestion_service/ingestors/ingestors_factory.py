@@ -1,6 +1,8 @@
+from typing import Callable
 import mlops_pipeline.data_ingestion_service.ingestor_utilities.custom_exceptions as ingestion_exceptions
-from DataDownloader import DataDownloader, KaggleDataDownloader
-from DataIngestor import DataIngestor, CSVDataIngestor
+import mlops_pipeline.data_ingestion_service.ingestor_utilities.custom_configs as ingestion_config
+from .DataDownloader import DataDownloader, KaggleDataDownloader
+from .DataIngestor import DataIngestor, S3DataIngestor, LocalFSDataIngestor
 
 
 def build_downloader(downloader_type: str, configuration: dict) -> DataDownloader:
@@ -15,7 +17,7 @@ def build_downloader(downloader_type: str, configuration: dict) -> DataDownloade
     """
     if downloader_type.lower() == "kaggle":
         try:
-            config = ingestion_exceptions.KaggleConfig(**configuration)
+            config = ingestion_config.KaggleConfig(**configuration)
         except Exception as e:
             raise ingestion_exceptions.WrongConfigError(configuration, str(e))
         ingestor = KaggleDataDownloader(config)
@@ -24,7 +26,9 @@ def build_downloader(downloader_type: str, configuration: dict) -> DataDownloade
         raise ingestion_exceptions.UnknownIngestorError(downloader_type)
 
 
-def build_ingestor(ingestor_type: str, configuration: dict) -> DataIngestor:
+def build_ingestor(
+    ingestor_type: str, reader_function: Callable, configuration: dict
+) -> DataIngestor:
     """The builder function for the Ingestor given the ingestor type.
 
     Parameters:
@@ -34,12 +38,19 @@ def build_ingestor(ingestor_type: str, configuration: dict) -> DataIngestor:
     Returns:
     An instance of a DataIngestor.
     """
-    if ingestor_type.lower() == "csv":
+    if ingestor_type.lower() == "local":
         try:
-            config = ingestion_exceptions.KaggleConfig(**configuration)
+            config = ingestion_config.LocalFSDataIngestorConfig(**configuration)
         except Exception as e:
             raise ingestion_exceptions.WrongConfigError(configuration, str(e))
-        ingestor = CSVDataIngestor(config)
+        ingestor = LocalFSDataIngestor(config, reader_function)
+        return ingestor
+    elif ingestor_type.lower() == "s3":
+        try:
+            config = ingestion_config.S3DataIngestorConfig(**configuration)
+        except Exception as e:
+            raise ingestion_exceptions.WrongConfigError(configuration, str(e))
+        ingestor = S3DataIngestor(config, reader_function)
         return ingestor
     else:
         raise ingestion_exceptions.UnknownIngestorError(ingestor_type)

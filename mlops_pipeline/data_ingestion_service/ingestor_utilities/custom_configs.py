@@ -1,5 +1,5 @@
-from dataclasses import dataclass
-from typing import Dict, Any
+from dataclasses import dataclass, field
+from typing import Dict, Any, Optional
 
 
 @dataclass
@@ -23,8 +23,6 @@ class DataIngestorConfig:
     """Base configuration dataclass for DataIngestors."""
 
     input_path: str
-    read_options: Dict[str, Any]
-    write_options: Dict[str, Any]
 
 
 @dataclass
@@ -35,11 +33,13 @@ class S3DataIngestorConfig(DataIngestorConfig):
     s3_secret_key: str
     s3_region: str
     s3_endpoint_url: str
+    read_options: Optional[Dict[str, Any]] = field(default_factory=dict)
+    write_options: Optional[Dict[str, Any]] = field(default_factory=dict)
 
 
 @dataclass
 class LocalFSDataIngestorConfig(DataIngestorConfig):
     """Configuration dataclass for LocalFSDataIngestors."""
 
-    # No configuration needed for now for LocalFSDataIngestors.
-    pass
+    read_options: Optional[Dict[str, Any]] = field(default_factory=dict)
+    write_options: Optional[Dict[str, Any]] = field(default_factory=dict)

@@ -1,12 +1,16 @@
 from abc import ABC, abstractclassmethod
 from typing import NoReturn
-import mlops_pipeline.utilities as utils
+import mlops_pipeline.data_ingestion_service.ingestor_utilities.custom_configs as utils
 
 
 class DataDownloader(ABC):
     """
     Abstract class for downloading data from external sources.
     """
+    def __init__(
+        self, config: utils.DataIngestorConfig,
+    ) -> NoReturn:
+        self.config = config
 
     @abstractclassmethod
     def download_data(self) -> NoReturn:

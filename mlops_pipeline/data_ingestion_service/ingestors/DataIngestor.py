@@ -1,6 +1,6 @@
 from abc import ABC, abstractclassmethod
-from typing import List, NoReturn
-import mlops_pipeline.utilities as utils
+from typing import List, NoReturn, Callable
+import mlops_pipeline.data_ingestion_service.ingestor_utilities.custom_configs as utils
 import pandas as pd
 import mlops_pipeline.logger as logger
 import os
@@ -13,7 +13,7 @@ class DataIngestor(ABC):
     """
 
     def __init__(
-        self, config: utils.DataIngestorConfig, reader_function: pd.DataReaderFunction
+        self, config: utils.DataIngestorConfig, reader_function: Callable,
     ) -> NoReturn:
         self.config = config
         self.reader_function = reader_function
@@ -56,7 +56,7 @@ class LocalFSDataIngestor(DataIngestor):
     """
 
     def __init__(
-        self, config: utils.DataIngestorConfig, reader_function: pd.DataReaderFunction
+        self, config: utils.DataIngestorConfig, reader_function: Callable,
     ) -> NoReturn:
         super().__init__(config, reader_function)
 
@@ -69,7 +69,7 @@ class LocalFSDataIngestor(DataIngestor):
         if not os.path.exists(path):
             os.makedirs(path)
 
-    def list_files(self):
+    def list_files(self) -> List[str]:
         """
         Method for listing files in a local file storage.
         """
@@ -82,7 +82,7 @@ class S3DataIngestor(DataIngestor):
     """
 
     def __init__(
-        self, config: utils.DataIngestorConfig, reader_function: pd.DataReaderFunction
+        self, config: utils.DataIngestorConfig, reader_function: Callable,
     ) -> NoReturn:
         super().__init__(config, reader_function)
         self.s3_client = boto3.client("s3")
@@ -96,7 +96,7 @@ class S3DataIngestor(DataIngestor):
         )
         self.s3_client.put_object(Bucket=self.config.data_path, Key=path + "/")
 
-    def list_files(self):
+    def list_files(self) -> List[str]:
         """
         Method for listing files in a S3 bucket.
         """

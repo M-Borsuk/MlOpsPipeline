@@ -5,7 +5,6 @@ from mlops_pipeline.data_ingestion_service.ingestor_utilities.custom_configs imp
     DataDownloaderConfig,
     KaggleConfig,
 )
-import mlops_pipeline.data_ingestion_service.ingestor_utilities.custom_exceptions as custom_exceptions
 from mlops_pipeline.utilities import load_yaml
 
 
@@ -72,7 +71,7 @@ def test_KaggleConfig_exception(download_url: str, output_path: str,) -> NoRetur
     "yaml_file,expected_result",
     [
         (
-            str(Path(__file__).parent.joinpath("data/test_config_file.yaml")),
+            str(Path(__file__).parent.parent.parent.joinpath("data/test_config_file.yaml")),
             {
                 "download_url": "http://",
                 "output_path": "http://",
