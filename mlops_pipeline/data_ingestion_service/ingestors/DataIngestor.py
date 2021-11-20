@@ -13,7 +13,9 @@ class DataIngestor(ABC):
     """
 
     def __init__(
-        self, config: utils.DataIngestorConfig, reader_function: Callable,
+        self,
+        config: utils.DataIngestorConfig,
+        reader_function: Callable,
     ) -> NoReturn:
         self.config = config
         self.reader_function = reader_function
@@ -22,18 +24,27 @@ class DataIngestor(ABC):
         """
         Base method for reading data into the pipeline using the reader_function.
         """
-        logger.logger.info(f"Reading data from {self.config.data_path}")
-        return self.reader_function(self.config.data_path, **self.config.reader_options)
+        logger.logger.info(f"Reading data from {self.config.input_path}")
+        return self.reader_function(
+            self.config.input_path, **self.config.reader_options
+        )
 
     def read_table_combination(self) -> List[pd.DataFrame]:
         """
         Base method for reading data from multiple different files into the pipeline using the reader_function.
         """
-        logger.logger.info(f"Reading data from {self.config.data_path}")
+        logger.logger.info(f"Reading data from {self.config.input_path}")
         data_frames = []
         for file in self.list_files():
             data_frames.append(self.reader_function(file, **self.config.reader_options))
         return data_frames
+
+    def write(self, data: pd.DataFrame) -> NoReturn:
+        """
+        Base method for writing data into the pipeline using the pandas to_csv method.
+        """
+        logger.logger.info(f"Writing data to {self.config.input_path}")
+        data.to_csv(self.config.output_path, **self.config.writer_options)
 
     @abstractclassmethod
     def create_directory(self, path: str) -> NoReturn:
@@ -56,7 +67,9 @@ class LocalFSDataIngestor(DataIngestor):
     """
 
     def __init__(
-        self, config: utils.DataIngestorConfig, reader_function: Callable,
+        self,
+        config: utils.DataIngestorConfig,
+        reader_function: Callable,
     ) -> NoReturn:
         super().__init__(config, reader_function)
 
@@ -64,7 +77,7 @@ class LocalFSDataIngestor(DataIngestor):
         """
         Method for creating a directory in a local file storage.
         """
-        path = os.path.join(self.config.data_path, path)
+        path = os.path.join(self.config.input_path, path)
         logger.logger.info(f"Creating directory {path}")
         if not os.path.exists(path):
             os.makedirs(path)
@@ -73,7 +86,7 @@ class LocalFSDataIngestor(DataIngestor):
         """
         Method for listing files in a local file storage.
         """
-        return os.listdir(self.config.data_path)
+        return os.listdir(self.config.input_path)
 
 
 class S3DataIngestor(DataIngestor):
@@ -82,7 +95,9 @@ class S3DataIngestor(DataIngestor):
     """
 
     def __init__(
-        self, config: utils.DataIngestorConfig, reader_function: Callable,
+        self,
+        config: utils.DataIngestorConfig,
+        reader_function: Callable,
     ) -> NoReturn:
         super().__init__(config, reader_function)
         self.s3_client = boto3.client("s3")
@@ -92,12 +107,12 @@ class S3DataIngestor(DataIngestor):
         Method for creating a directory in a S3 bucket.
         """
         logger.logger.info(
-            f"Creating directory {path} in the {self.config.data_path} bucket.."
+            f"Creating directory {path} in the {self.config.s3_bucket} bucket.."
         )
-        self.s3_client.put_object(Bucket=self.config.data_path, Key=path + "/")
+        self.s3_client.put_object(Bucket=self.config.s3_bucket, Key=path + "/")
 
     def list_files(self) -> List[str]:
         """
         Method for listing files in a S3 bucket.
         """
-        return self.s3_client.list_objects(Bucket=self.config.data_path)["Contents"]
+        return self.s3_client.list_objects(Bucket=self.config.s3_bucket)["Contents"]

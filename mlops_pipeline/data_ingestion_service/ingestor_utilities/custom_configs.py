@@ -23,6 +23,7 @@ class DataIngestorConfig:
     """Base configuration dataclass for DataIngestors."""
 
     input_path: str
+    output_path: str
 
 
 @dataclass
@@ -32,7 +33,7 @@ class S3DataIngestorConfig(DataIngestorConfig):
     s3_access_key: str
     s3_secret_key: str
     s3_region: str
-    s3_endpoint_url: str
+    s3_bucket: str
     read_options: Optional[Dict[str, Any]] = field(default_factory=dict)
     write_options: Optional[Dict[str, Any]] = field(default_factory=dict)
 

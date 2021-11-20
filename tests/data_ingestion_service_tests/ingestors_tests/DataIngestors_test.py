@@ -37,17 +37,18 @@ def test_downloader_factory(downloader_type: str, configuration: dict) -> NoRetu
         (
             "LOcal",
             pd.read_csv,
-            {"input_path": "titanic.csv"},
+            {"input_path": "titanic.csv", "output_path": "titanic.csv"},
         ),
         (
             "s3",
             pd.read_sql,
             {
                 "input_path": "titanic.csv",
+                "output_path": "titanic.csv",
                 "s3_access_key": "175f1735gv",
                 "s3_secret_key": "175f1735gv",
                 "s3_region": "eu-west-4",
-                "s3_endpoint_url": "https://s3.eu-west-4.amazonaws.com",
+                "s3_bucket": "https://s3.eu-west-4.amazonaws.com",
                 "read_options": {"error_bad_lines": False},
             },
         ),
